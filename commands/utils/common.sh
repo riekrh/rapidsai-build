@@ -20,7 +20,12 @@ CONFIG_FILE_NAME=${RAPIDSDEVTOOL_DIR}/config
 
 # TODO: check that each of the dirs referenced in vars exist
 
-DOCKER=nvidia-docker
+if [ `which podman` != "" ]; then
+    DOCKER=podman
+else
+    DOCKER=nvidia-docker
+fi
+
 TIMESTAMP=$(date "+%Y%m%d%H%M%S")
 
 # Find valid template names based on the templates present in
