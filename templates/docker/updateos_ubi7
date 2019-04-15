@@ -6,6 +6,8 @@ RUN mkdir -p ${RAPIDS_SRC_DIR}/tmp
 #
 COPY ${SUPPORT_FILES_DIR}/*.rpm ${RAPIDS_SRC_DIR}/tmp
 
+RUN for curr in devtools optional extras supplementary; \
+    do yum-config-manager --enable rhel-7-server-${curr}-rpms ; done 
 RUN yum install -y ${RAPIDS_SRC_DIR}/tmp/*.rpm && \
     yum upgrade -y && \
     yum install -y \
