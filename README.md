@@ -120,3 +120,17 @@ All templates have the ability to identify the following keywords when being use
 All other args your script needs are passed straight through from `rapidsdevtool.sh` to your script.
 
 Your script may access the `commands/utils` subdir which contains utilities shared by all the command scripts. See any of the existing scripts in `commands` for examples.
+
+## Building on `Red Hat Universal Base Image 7 (UBI7)`
+
+`UBI` is a re-distributable container base image provided by Red Hat. See LINK for details.
+
+In order to build for UBI, you need a build host with `Red Hat Enterprise Linux` and the [`Red Hat Developer Toolset`](https://developers.redhat.com/products/developertoolset/overview).
+You can easily optain a developer subscription from the above link.
+
+To build, ensure that the `RHEL Extras` repository is enabled and that [`podman`](https://podman.io/) is installed: 
+```bash
+sudo subscription-manager repos --enable rhel-7-server-extras-rpms
+sudo yum -y install podman
+```
+
