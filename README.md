@@ -46,7 +46,7 @@ buildDockerImage [-h|-H] [-d] -t <templateName> [-i <imageTagName>] [<dockerBuil
    command.
 
 buildDockerImageFromFile [-h|-H] -f <dockerFile> -i <imageTagName> [-l <logDir>] [<dockerBuildArgs>]
-   Creates a Docker image using nvidia-docker and <dockerFile>, tagged with
+   Creates a Docker image using nvidia-docker (or if available Red Hat's podman) and <dockerFile>, tagged with
    <imageTagName>. <dockerBuildArgs> can be provided to pass docker args as-is
    to the build command.
 
@@ -75,7 +75,7 @@ genDockerfile [-h|-H] -t <templateName> [-o <outputFileName>]
    "templates/docker/Dockerfile_<templateName>.template", and
    <templateName> cannot contain a . or _.
 
-   Currently, <templateName> must be one of: centos7-base centos7-devel centos7-runtime ubuntu-base ubuntu-devel ubuntu-runtime
+   Currently, <templateName> must be one of: ubi7-base ubi7-devel ubi7-runtime centos7-base centos7-devel centos7-runtime ubuntu-base ubuntu-devel ubuntu-runtime
 
    Use -o <outputFileName> to specify the name of the generated Dockerfile, but
    if not specified, the default generated Dockerfile will be placed in
@@ -89,7 +89,7 @@ listDockerTemplNames [-h|-H]
    <templateName> cannot contain a . or _.
 
    The current list of valid templates found is:
-      centos7-base centos7-devel centos7-runtime ubuntu-base ubuntu-devel ubuntu-runtime
+       ubi7-base ubi7-devel ubi7-runtime centos7-base centos7-devel centos7-runtime ubuntu-base ubuntu-devel ubuntu-runtime
 ```
 
 Edit the `config` file to customize a build with specific RAPIDS components, branches, and dependencies.
@@ -120,3 +120,17 @@ All templates have the ability to identify the following keywords when being use
 All other args your script needs are passed straight through from `rapidsdevtool.sh` to your script.
 
 Your script may access the `commands/utils` subdir which contains utilities shared by all the command scripts. See any of the existing scripts in `commands` for examples.
+
+## Building on `Red Hat Universal Base Image 7 (UBI7)`
+
+`UBI` is a re-distributable container base image provided by Red Hat. See LINK for details.
+
+In order to build for UBI, you need a build host with `Red Hat Enterprise Linux` and the [`Red Hat Developer Toolset`](https://developers.redhat.com/products/developertoolset/overview).
+You can easily optain a developer subscription from the above link.
+
+To build, ensure that the `RHEL Extras` repository is enabled and that [`podman`](https://podman.io/) is installed: 
+```bash
+sudo subscription-manager repos --enable rhel-7-server-extras-rpms
+sudo yum -y install podman
+```
+
