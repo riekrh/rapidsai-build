@@ -6,10 +6,16 @@ RUN mkdir -p ${RAPIDS_SRC_DIR}/tmp
 #
 COPY ${SUPPORT_FILES_DIR}/*.rpm ${RAPIDS_SRC_DIR}/tmp
 
-RUN for curr in devtools optional extras supplementary; \
-    do yum-config-manager --enable rhel-7-server-${curr}-rpms ; done 
-RUN yum install -y ${RAPIDS_SRC_DIR}/tmp/*.rpm && \
+RUN for curr in rhel-server-rhscl-7-rpms \
+    rhel-7-server-devtools-rpms \
+    rhel-7-server-optional-rpms \
+    rhel-7-server-extras-rpms \
+    rhel-7-server-supplementary-rpms \
+    ; do yum-config-manager --enable ${curr} ; done
+
+RUN yum -y clean all && \
     yum upgrade -y && \
+    yum install -y ${RAPIDS_SRC_DIR}/tmp/*.rpm && \
     yum install -y \
       bzip2 \
       curl \
@@ -18,14 +24,26 @@ RUN yum install -y ${RAPIDS_SRC_DIR}/tmp/*.rpm && \
       vim \
       wget \
       which \
-      clang \
-      make \
+      devtoolset-8-gcc \
+      devtoolset-8-gcc-c++ \
+      devtoolset-8-elfutils \
+      devtoolset-8-elfutils-libelf \
+      devtoolset-8-elfutils-libs \
+      devtoolset-8-libstdc++-devel \
+      devtoolset-8-make \     
+      scl-utils \
+      llvm-toolset-7.0-clang \
+      boost-devel \
+      cmake \
       libnccl-2.4.2-1+cuda${CUDA_MAJORMINOR_VERSION} \
       libnccl-devel-2.4.2-1+cuda${CUDA_MAJORMINOR_VERSION} \
       libnccl-static-2.4.2-1+cuda${CUDA_MAJORMINOR_VERSION} \
       gmp-devel mpfr-devel libmpc-devel file 
 
+RUN source scl_source enable devtoolset-8
+
 RUN curl -L ${TINI_URL} -o /usr/bin/tini && \
     chmod +x /usr/bin/tini
 
+RUN yum -y clean all
 RUN rm -rf ${RAPIDS_SRC_DIR}/tmp
